@@ -1,4 +1,4 @@
-name: sms_scrapping tests
+name: link shortener tests
 
 on: [ push ]
 
