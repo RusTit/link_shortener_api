@@ -39,8 +39,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Yarn
-        run: npm install -g yarn
+      - name: Install Yarn and Typeorm
+        run: npm install -g yarn typeorm
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
