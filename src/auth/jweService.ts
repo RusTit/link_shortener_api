@@ -1,19 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import CompactEncrypt from 'jose/jwe/compact/encrypt';
-import parseJwk from 'jose/jwk/parse';
-import * as fs from 'fs/promises';
+import { KeyLike } from 'jose/jwk/from_key_like';
 
 @Injectable()
 export class JweService {
+  constructor(
+    @Inject('PUBLIC_ASYMMETRIC_KEY') private readonly publicKey: KeyLike,
+  ) {}
+
   async sign(payload: string): Promise<string> {
     const encoder = new TextEncoder();
-    const publicKeyString = await fs.readFile('publicKey.json', {
-      encoding: 'utf8',
-    });
-    const publicKey = await parseJwk(JSON.parse(publicKeyString), 'PS256');
     const jwePayload = await new CompactEncrypt(encoder.encode(payload))
       .setProtectedHeader({ alg: 'RSA-OAEP-256', enc: 'A256GCM' })
-      .encrypt(publicKey);
+      .encrypt(this.publicKey);
     Logger.debug(`JWE payload: ${jwePayload}`);
     return jwePayload;
   }

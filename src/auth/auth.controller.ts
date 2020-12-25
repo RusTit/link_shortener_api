@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { JweAuthGuard } from './jwe-auth.guard';
-import { UserCredentialsDto } from './dtos';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthTokenDto, UserCredentialsDto } from './dtos';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -13,7 +13,15 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Req() req: Request, @Body() body: UserCredentialsDto) {
+  @ApiOkResponse({
+    description: 'Return JWT token',
+    type: AuthTokenDto,
+  })
+  async login(
+    @Req() req: Request,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Body() body: UserCredentialsDto,
+  ): Promise<AuthTokenDto> {
     return this.authService.login(req.user);
   }
 

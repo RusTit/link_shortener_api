@@ -73,9 +73,6 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Generate keys
-        run: yarn generateToken
-
       - name: Run tests
         run: yarn test
 
