@@ -2,6 +2,7 @@ import generateSecret from 'jose/util/generate_secret';
 import generateKeyPair from 'jose/util/generate_key_pair';
 import fromKeyLike, { JWK } from 'jose/jwk/from_key_like';
 import * as fs from 'fs/promises';
+import { constants } from 'fs';
 
 export async function savePlain(fileName: string, key: JWK): Promise<void> {
   const dataStr = JSON.stringify(key);
@@ -10,7 +11,7 @@ export async function savePlain(fileName: string, key: JWK): Promise<void> {
 
 export async function fileExist(fileName: string): Promise<boolean> {
   try {
-    await fs.access(fileName);
+    await fs.access(fileName, constants.F_OK);
     return true;
   } catch {
     return false;
