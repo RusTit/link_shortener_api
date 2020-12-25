@@ -23,7 +23,6 @@ import { getASymmetricKeys } from './generateJWEToken';
     {
       provide: 'PUBLIC_ASYMMETRIC_KEY',
       useFactory: async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [, key] = await getASymmetricKeys();
         return key;
       },
