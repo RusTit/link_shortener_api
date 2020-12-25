@@ -15,6 +15,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('auth')
     .addTag('link-engine')
+    .addBearerAuth({
+      bearerFormat: 'jwt',
+      type: 'http',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

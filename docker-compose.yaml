@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - '6633:5432'
+    environment:
+      POSTGRES_USER: db_username
+      POSTGRES_PASSWORD: db_password
+      POSTGRES_DB: db_name
+    # Using a volume will allow for persistent local storage
+    volumes:
+      - ./postgres-volume:/var/lib/pg/data
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - 6379:6379
