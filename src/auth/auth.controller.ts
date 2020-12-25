@@ -4,8 +4,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { JweAuthGuard } from './jwe-auth.guard';
 import { UserCredentialsDto } from './dtos';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -15,6 +17,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JweAuthGuard)
   @Get('profile')
   getProfile(@Req() req: Request) {

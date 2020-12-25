@@ -35,3 +35,8 @@ lerna-debug.log*
 
 # .env files
 .env
+
+# keys
+/secretKey.json
+/publicKey.json
+/privateKey.json
