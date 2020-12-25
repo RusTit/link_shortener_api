@@ -14,7 +14,7 @@ export class JweService {
     const jwePayload = await new CompactEncrypt(encoder.encode(payload))
       .setProtectedHeader({ alg: 'RSA-OAEP-256', enc: 'A256GCM' })
       .encrypt(this.publicKey);
-    Logger.debug(`JWE payload: ${jwePayload}`);
+    Logger.debug(`JWE payload (${jwePayload.length}): ${jwePayload}`);
     return jwePayload;
   }
 }
