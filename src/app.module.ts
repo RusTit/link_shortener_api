@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { LinkEngineModule } from './link-engine/link-engine.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule.register({ session: false }),
     UsersModule,
     AuthModule,
+    LinkEngineModule,
   ],
   controllers: [AppController],
   providers: [AppService],
