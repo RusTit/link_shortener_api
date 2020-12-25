@@ -14,7 +14,7 @@ describe('AuthController', () => {
         AuthService,
         JweService,
         {
-          provide: 'PUBLIC_ASYMMETRIC_KEY',
+          provide: 'JWE_ASYMMETRIC_KEYS',
           useFactory: mockPublicKey,
         },
       ],

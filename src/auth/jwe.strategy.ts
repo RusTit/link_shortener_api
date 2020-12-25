@@ -11,10 +11,10 @@ import { KeyLike } from 'jose/jwk/from_key_like';
 
 @Injectable()
 export class JweStrategy extends PassportStrategy(Strategy, 'bearer') {
-  constructor(
-    @Inject('PRIVATE_ASYMMETRIC_KEY') private readonly privateKey: KeyLike,
-  ) {
+  private readonly privateKey: KeyLike;
+  constructor(@Inject('JWE_ASYMMETRIC_KEYS') private keys: [KeyLike, KeyLike]) {
     super();
+    this.privateKey = keys[0];
   }
 
   async validate(jwe?: string) {

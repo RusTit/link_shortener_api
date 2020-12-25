@@ -4,7 +4,7 @@ import { JweService } from './jweService';
 import parseJwk from 'jose/jwk/parse';
 
 export const mockPublicKey = async () => {
-  return await parseJwk(
+  const publicKey = await parseJwk(
     {
       e: 'AQAB',
       n:
@@ -13,6 +13,7 @@ export const mockPublicKey = async () => {
     },
     'RSA-OAEP-256',
   );
+  return [null, publicKey];
 };
 
 describe('AuthService', () => {
@@ -24,7 +25,7 @@ describe('AuthService', () => {
         AuthService,
         JweService,
         {
-          provide: 'PUBLIC_ASYMMETRIC_KEY',
+          provide: 'JWE_ASYMMETRIC_KEYS',
           useFactory: mockPublicKey,
         },
       ],

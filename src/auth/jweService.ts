@@ -4,9 +4,10 @@ import { KeyLike } from 'jose/jwk/from_key_like';
 
 @Injectable()
 export class JweService {
-  constructor(
-    @Inject('PUBLIC_ASYMMETRIC_KEY') private readonly publicKey: KeyLike,
-  ) {}
+  private readonly publicKey: KeyLike;
+  constructor(@Inject('JWE_ASYMMETRIC_KEYS') private keys: [KeyLike, KeyLike]) {
+    this.publicKey = keys[1];
+  }
 
   async sign(payload: string): Promise<string> {
     const encoder = new TextEncoder();

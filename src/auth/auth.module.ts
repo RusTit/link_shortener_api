@@ -5,6 +5,7 @@ import { LocalStrategy } from './local.strategy';
 import { JweService } from './jweService';
 import { JweStrategy } from './jwe.strategy';
 import { getASymmetricKeys } from './generateJWEToken';
+import { KeyLike } from 'jose/jwk/from_key_like';
 
 @Module({
   controllers: [AuthController],
@@ -14,17 +15,9 @@ import { getASymmetricKeys } from './generateJWEToken';
     JweService,
     JweStrategy,
     {
-      provide: 'PRIVATE_ASYMMETRIC_KEY',
-      useFactory: async () => {
-        const [key] = await getASymmetricKeys();
-        return key;
-      },
-    },
-    {
-      provide: 'PUBLIC_ASYMMETRIC_KEY',
-      useFactory: async () => {
-        const [, key] = await getASymmetricKeys();
-        return key;
+      provide: 'JWE_ASYMMETRIC_KEYS',
+      useFactory: async (): Promise<[KeyLike, KeyLike]> => {
+        return await getASymmetricKeys();
       },
     },
   ],
