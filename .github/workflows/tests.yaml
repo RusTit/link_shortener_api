@@ -43,6 +43,9 @@ jobs:
     env:
       DATABASE_URL: postgres://db_username:db_password@localhost:5432/db_name
       NODE_ENV: test
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+      GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
 
     steps:
       - uses: actions/checkout@v2

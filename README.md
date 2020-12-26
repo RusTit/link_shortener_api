@@ -11,4 +11,10 @@ LINK_ENGINE_URL=
 REDIS_HOST=localhost
 # optional
 REDIS_PORT=6379
+# required
+GOOGLE_CLIENT_ID=
+# required
+GOOGLE_SECRET=
+# required
+GOOGLE_CALLBACK_URL=
 ```
