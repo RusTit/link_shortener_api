@@ -21,12 +21,7 @@ import { BullModule } from '@nestjs/bull';
     TypeOrmModule.forRoot(),
     PassportModule.register({ session: false }),
     BullModule.forRoot({
-      redis: {
-        host: process.env.REDIS_HOST ?? 'localhost',
-        port: process.env.REDIS_PORT
-          ? Number.parseInt(process.env.REDIS_PORT)
-          : 6379,
-      },
+      redis: process.env.REDIS_URL ?? 'redis://localhost:6379',
     }),
     UsersModule,
     AuthModule,

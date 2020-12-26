@@ -8,9 +8,7 @@ DATABASE_URL=postgres://db_username:db_password@localhost:6633/db_name
 # optional
 LINK_ENGINE_URL=
 # optional
-REDIS_HOST=localhost
-# optional
-REDIS_PORT=6379
+REDIS_URL=redis://localhost:6379
 # required
 GOOGLE_CLIENT_ID=
 # required
