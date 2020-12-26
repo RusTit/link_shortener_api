@@ -13,8 +13,6 @@ async function bootstrap() {
     .setTitle('Link Shortener API')
     .setDescription('The Link Shortener API')
     .setVersion('1.0')
-    .addTag('auth')
-    .addTag('link-engine')
     .addBearerAuth({
       bearerFormat: 'jwt',
       type: 'http',
