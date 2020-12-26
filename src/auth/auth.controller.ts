@@ -41,12 +41,14 @@ export class AuthController {
   }
 
   @Get('google')
+  @ApiTags('oauth2')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request) {
     Logger.debug('Google');
   }
 
   @Get('google/redirect')
+  @ApiTags('oauth2')
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req: Request) {
     return this.authService.googleLogin(req);
