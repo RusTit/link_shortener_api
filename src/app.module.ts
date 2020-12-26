@@ -10,6 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { LinkEngineModule } from './link-engine/link-engine.module';
 import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { PaymentsModule } from './payments/payments.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { PaymentsModule } from './payments/payments.module';
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(),
     PassportModule.register({ session: false }),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     UsersModule,
     AuthModule,
     LinkEngineModule,
