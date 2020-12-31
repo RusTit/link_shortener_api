@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Initial1609393231672 implements MigrationInterface {
-  name = 'Initial1609393231672';
+export class Initial1609397981695 implements MigrationInterface {
+  name = 'Initial1609397981695';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "user_invoice" ("id" SERIAL NOT NULL, "type" "user_invoice_type_enum" NOT NULL DEFAULT '0', "amount" money NOT NULL, "billing_period_start" TIMESTAMP WITH TIME ZONE NOT NULL, "billing_period_end" TIMESTAMP WITH TIME ZONE NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "userId" integer, "paymentId" integer, CONSTRAINT "PK_dde8e602cd78265686a0c1cdfb4" PRIMARY KEY ("id"))`,
+      `CREATE TYPE "user_invoice_invoice_type_enum" AS ENUM('0', '1')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "user_invoice" ("id" SERIAL NOT NULL, "invoice_type" "user_invoice_invoice_type_enum" NOT NULL DEFAULT '0', "amount" money NOT NULL, "billing_period_start" TIMESTAMP WITH TIME ZONE NOT NULL, "billing_period_end" TIMESTAMP WITH TIME ZONE NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "userId" integer, "paymentId" integer, CONSTRAINT "PK_dde8e602cd78265686a0c1cdfb4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "user_payment" ("id" SERIAL NOT NULL, "payment_id" text NOT NULL, "payment_gateway" "user_payment_payment_gateway_enum" NOT NULL, "amount" money NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "userId" integer, CONSTRAINT "PK_57db108902981ff1f5fcc2f2336" PRIMARY KEY ("id"))`,
@@ -59,5 +62,6 @@ export class Initial1609393231672 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "user_profile"`);
     await queryRunner.query(`DROP TABLE "user_payment"`);
     await queryRunner.query(`DROP TABLE "user_invoice"`);
+    await queryRunner.query(`DROP TYPE "user_invoice_invoice_type_enum"`);
   }
 }

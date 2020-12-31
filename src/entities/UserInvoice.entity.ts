@@ -24,7 +24,7 @@ export class UserInvoice {
     enum: UserInvoiceType,
     default: UserInvoiceType.MONTHLY_PLAN_FEE,
   })
-  type!: UserInvoiceType;
+  invoice_type!: UserInvoiceType;
 
   @Column({
     type: 'money',
