@@ -11,11 +11,11 @@ export class TokensService {
     @InjectRepository(Token)
     private tokenRepository: Repository<Token>,
   ) {}
-  async create(user: User): Promise<boolean> {
+  async create(user: User): Promise<Token | undefined> {
     const token = new Token();
     token.user = user;
     await this.tokenRepository.save(token);
-    return true;
+    return token;
   }
 
   async findAll(user: User): Promise<Token[]> {
@@ -26,23 +26,23 @@ export class TokensService {
     });
   }
 
-  async findOne(id: number, user: User): Promise<Token | undefined> {
+  async findOne(uuid: string, user: User): Promise<Token | undefined> {
     return this.tokenRepository.findOne({
       where: {
         user,
-        id,
+        token_value: uuid,
       },
     });
   }
 
   async update(
-    id: number,
+    uuid: string,
     user: User,
     updateTokenDto: UpdateTokenDto,
   ): Promise<boolean> {
     const tokenExist = await this.tokenRepository.findOne({
       where: {
-        id,
+        token_value: uuid,
         user,
       },
     });
@@ -54,10 +54,10 @@ export class TokensService {
     return true;
   }
 
-  async remove(id: number, user: User): Promise<boolean> {
+  async remove(uuid: string, user: User): Promise<boolean> {
     const tokenExist = await this.tokenRepository.findOne({
       where: {
-        id,
+        token_value: uuid,
         user,
       },
     });

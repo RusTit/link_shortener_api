@@ -8,6 +8,7 @@ import {
   Req,
   BadRequestException,
   Body,
+  Put,
 } from '@nestjs/common';
 import { TokensService } from './tokens.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -15,7 +16,7 @@ import { JweAuthGuard } from '../auth/jwe-auth.guard';
 import { Request } from 'express';
 import { User } from '../entities/User.entity';
 import { Token } from '../entities/Token.entity';
-import { UpdateTokenDto } from './dto/update-token.dto';
+import { TokenDto, UpdateTokenDto } from './dto/update-token.dto';
 
 @ApiTags('tokens')
 @ApiBearerAuth()
@@ -25,12 +26,12 @@ export class TokensController {
   constructor(private readonly tokensService: TokensService) {}
 
   @Post()
-  async create(@Req() req: Request) {
-    const result = this.tokensService.create(req.user as User);
+  async create(@Req() req: Request): Promise<TokenDto> {
+    const result = await this.tokensService.create(req.user as User);
     if (result) {
       return {
-        ok: true,
-        status: 'Token was created',
+        is_active: result.is_active,
+        token: result.token_value,
       };
     }
     throw new BadRequestException({
@@ -40,15 +41,27 @@ export class TokensController {
   }
 
   @Get()
-  async findAll(@Req() req: Request): Promise<Token[]> {
-    return this.tokensService.findAll(req.user as User);
+  async findAll(@Req() req: Request): Promise<TokenDto[]> {
+    const dbEntities = await this.tokensService.findAll(req.user as User);
+    return dbEntities.map((dbEntity) => {
+      return {
+        is_active: dbEntity.is_active,
+        token: dbEntity.token_value,
+      } as TokenDto;
+    });
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string, @Req() req: Request): Promise<Token> {
-    const token = await this.tokensService.findOne(+id, req.user as User);
+  @Get(':uuid')
+  async findOne(
+    @Param('uuid') uuid: string,
+    @Req() req: Request,
+  ): Promise<TokenDto> {
+    const token = await this.tokensService.findOne(uuid, req.user as User);
     if (token) {
-      return token;
+      return {
+        is_active: token.is_active,
+        token: token.token_value,
+      };
     }
     throw new BadRequestException({
       ok: false,
@@ -56,13 +69,14 @@ export class TokensController {
     });
   }
 
+  @Put(':uuid')
   async update(
-    @Param('id') id: number,
+    @Param('uuid') uuid: string,
     @Req() req: Request,
     @Body() updateTokenDto: UpdateTokenDto,
   ) {
     const result = await this.tokensService.update(
-      id,
+      uuid,
       req.user as User,
       updateTokenDto,
     );
@@ -78,9 +92,9 @@ export class TokensController {
     });
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req: Request) {
-    const result = await this.tokensService.remove(+id, req.user as User);
+  @Delete(':uuid')
+  async remove(@Param('uuid') uuid: string, @Req() req: Request) {
+    const result = await this.tokensService.remove(uuid, req.user as User);
     if (result) {
       return {
         ok: true,
