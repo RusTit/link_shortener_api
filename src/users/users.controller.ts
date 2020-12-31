@@ -24,6 +24,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   @Get(':id/activate')
   async activate(@Param('id') id: number) {
@@ -42,6 +43,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   @Get(':id/inactivate')
   async inactivate(@Param('id') id: number) {
@@ -91,6 +93,7 @@ export class UsersController {
   @Get()
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   findAll() {
     return this.usersService.findAll();
@@ -99,6 +102,7 @@ export class UsersController {
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
@@ -107,6 +111,7 @@ export class UsersController {
   @Put(':id')
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
@@ -115,6 +120,7 @@ export class UsersController {
   @Delete(':id')
   @ApiBearerAuth()
   @UseGuards(JweAuthGuard, RolesGuard)
+  @ApiTags('admin')
   @Roles(UserRole.ADMIN)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
