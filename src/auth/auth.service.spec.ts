@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JweService } from './jweService';
 import parseJwk from 'jose/jwk/parse';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from '../entities/User.entity';
+import { UserMock } from '../users/users.service.spec';
 
 export const mockPublicKey = async () => {
   const publicKey = await parseJwk(
@@ -28,6 +31,7 @@ describe('AuthService', () => {
           provide: 'JWE_ASYMMETRIC_KEYS',
           useFactory: mockPublicKey,
         },
+        { provide: getRepositoryToken(User), useValue: UserMock },
       ],
     }).compile();
 

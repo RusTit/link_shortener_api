@@ -13,6 +13,7 @@ import { Request } from 'express';
 import { JweAuthGuard } from './jwe-auth.guard';
 import { AuthTokenDto, UserCredentialsDto } from './dtos';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { User } from '../entities/User.entity';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -30,7 +31,7 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() body: UserCredentialsDto,
   ): Promise<AuthTokenDto> {
-    return this.authService.login(req.user);
+    return this.authService.login(req.user as User);
   }
 
   @ApiBearerAuth()

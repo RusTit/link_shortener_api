@@ -6,20 +6,82 @@ import {
   Put,
   Param,
   Delete,
+  BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JweAuthGuard } from '../auth/jwe-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard)
+  @Get(':id/activate')
+  async activate(@Param('id') id: number) {
+    const result = await this.usersService.activate(id);
+    if (result) {
+      return {
+        ok: true,
+        status: 'User was activated',
+      };
+    }
+    return new BadRequestException({
+      ok: false,
+      status: `User wasn't activated`,
+    });
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard)
+  @Get(':id/inactivate')
+  async inactivate(@Param('id') id: number) {
+    const result = await this.usersService.inActivate(id);
+    if (result) {
+      return {
+        ok: true,
+        status: 'User was inactivated',
+      };
+    }
+    return new BadRequestException({
+      ok: false,
+      status: `User wasn't inactivated`,
+    });
+  }
+
+  @Get('activation/:uuid')
+  async activateByUrl(@Param('uuid') uuid: string) {
+    const result = await this.usersService.activateByUuid(uuid);
+    if (result) {
+      return {
+        ok: true,
+        status: 'User was successfully activated',
+      };
+    }
+    throw new BadRequestException({
+      ok: false,
+      status: 'Activation url is invalid',
+    });
+  }
+
   @Post('register')
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const result = await this.usersService.create(createUserDto);
+    if (result) {
+      return {
+        ok: true,
+        status: 'User was created',
+      };
+    }
+    throw new BadRequestException({
+      ok: false,
+      status: 'User exist',
+    });
   }
 
   @Get()

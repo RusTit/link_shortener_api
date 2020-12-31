@@ -7,8 +7,11 @@ import { JweStrategy } from './jwe.strategy';
 import { getASymmetricKeys } from './generateJWEToken';
 import { KeyLike } from 'jose/jwk/from_key_like';
 import { GoogleStrategy } from './google.strategy';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../entities/User.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [AuthController],
   providers: [
     AuthService,

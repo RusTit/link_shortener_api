@@ -1,15 +1,31 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
+  Generated,
   OneToMany,
   OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserPayment } from './UserPayment.entity';
 import { UserProfile } from './UserProfile.entity';
 import { UserInvoice } from './UserInvoice.entity';
+import { hash, compare } from 'bcrypt';
+
+export const SALT_ROUNDS = 10;
+
+export enum UserLevel {
+  FREE = 0,
+  STARTER = 1,
+  PRO = 2,
+  PREMIUM = 3,
+}
+
+export enum UserRole {
+  STANDART = 0,
+  ADMIN = 1,
+}
 
 @Entity()
 export class User {
@@ -29,6 +45,31 @@ export class User {
     nullable: true,
   })
   password!: string | null;
+
+  async setPassword(value: string) {
+    this.password = await hash(value, SALT_ROUNDS);
+  }
+
+  async isPasswordValid(value: string): Promise<boolean> {
+    if (!this.password) {
+      return false;
+    }
+    return compare(value, this.password);
+  }
+
+  @Column({
+    type: 'enum',
+    enum: UserLevel,
+    default: UserLevel.FREE,
+  })
+  user_level!: UserLevel;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.STANDART,
+  })
+  user_role!: UserRole;
 
   @OneToMany(() => UserInvoice, (userInvoice) => userInvoice.user, {
     cascade: ['insert', 'update', 'remove', 'recover', 'soft-remove'],
@@ -55,8 +96,8 @@ export class User {
   @Column({
     nullable: true,
     type: 'uuid',
-    default: 'uuid_generate_v4()',
   })
+  @Generated('uuid')
   activation_token!: string | null;
 
   @CreateDateColumn({
