@@ -8,10 +8,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { hash, compare } from 'bcrypt';
 import { UserPayment } from './UserPayment.entity';
 import { UserProfile } from './UserProfile.entity';
 import { UserInvoice } from './UserInvoice.entity';
-import { hash, compare } from 'bcrypt';
+import { Token } from './Token.entity';
 
 export const SALT_ROUNDS = 10;
 
@@ -80,6 +81,11 @@ export class User {
     cascade: ['insert', 'update', 'remove', 'recover', 'soft-remove'],
   })
   payments!: UserPayment[];
+
+  @OneToMany(() => Token, (token) => token.user, {
+    cascade: ['insert', 'update', 'remove', 'recover', 'soft-remove'],
+  })
+  tokens!: Token[];
 
   @OneToOne(() => UserProfile, {
     cascade: ['insert', 'update', 'remove', 'recover', 'soft-remove'],

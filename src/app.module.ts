@@ -11,6 +11,7 @@ import { LinkEngineModule } from './link-engine/link-engine.module';
 import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { PaymentsModule } from './payments/payments.module';
 import { BullModule } from '@nestjs/bull';
+import { TokensModule } from './tokens/tokens.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BullModule } from '@nestjs/bull';
     LinkEngineModule,
     ScheduleTasksModule,
     PaymentsModule,
+    TokensModule,
   ],
   controllers: [AppController],
   providers: [AppService],

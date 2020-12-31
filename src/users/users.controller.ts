@@ -89,21 +89,33 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
