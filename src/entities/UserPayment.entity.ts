@@ -10,7 +10,7 @@ import {
 import { User } from './User.entity';
 import { UserInvoice } from './UserInvoice.entity';
 
-export enum PaymentGatewayType {
+export enum GatewayType {
   PAYPAL = '1',
   STRIPE = '2',
   CoinPayment = '3',
@@ -29,9 +29,9 @@ export class UserPayment {
 
   @Column({
     type: 'enum',
-    enum: PaymentGatewayType,
+    enum: GatewayType,
   })
-  payment_gateway!: PaymentGatewayType;
+  gateway_type!: GatewayType;
 
   @Column({
     type: 'money',
