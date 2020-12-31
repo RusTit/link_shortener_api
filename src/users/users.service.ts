@@ -75,19 +75,43 @@ export class UsersService {
     return true;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<User | undefined> {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {
+    const userExist = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!userExist) {
+      return false;
+    }
+    userExist.email = updateUserDto.email.trim().toLowerCase();
+    await userExist.setPassword(updateUserDto.password);
+    await this.userRepository.save(userExist);
+    return true;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<boolean> {
+    const userExist = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!userExist) {
+      return false;
+    }
+    await this.userRepository.remove(userExist);
+    return true;
   }
 }
