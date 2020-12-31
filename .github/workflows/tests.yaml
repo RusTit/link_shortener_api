@@ -77,7 +77,9 @@ jobs:
         run: yarn build
 
       - name: Run migrations
-        run: env NODE_ENV=production typeorm migration:run
+        run: typeorm migration:run
+        env:
+          NODE_ENV: production
 
       - name: Run tests
         run: yarn test

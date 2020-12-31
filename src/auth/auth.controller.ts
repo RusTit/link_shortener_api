@@ -52,6 +52,6 @@ export class AuthController {
   @ApiTags('oauth2')
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req: Request) {
-    return this.authService.googleLogin(req);
+    return this.authService.googleLogin(req.user as User);
   }
 }
