@@ -17,15 +17,15 @@ import { Token } from './Token.entity';
 export const SALT_ROUNDS = 10;
 
 export enum UserLevel {
-  FREE = 0,
-  STARTER = 1,
-  PRO = 2,
-  PREMIUM = 3,
+  FREE = '0',
+  STARTER = '1',
+  PRO = '2',
+  PREMIUM = '3',
 }
 
 export enum UserRole {
-  STANDART = 0,
-  ADMIN = 1,
+  STANDART = '0',
+  ADMIN = '1',
 }
 
 @Entity()
@@ -94,7 +94,7 @@ export class User {
 
   @Column({
     type: 'boolean',
-    default: false,
+    default: true, // temporary
     nullable: false,
   })
   is_active!: boolean;

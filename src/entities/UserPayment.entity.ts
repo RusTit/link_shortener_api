@@ -11,9 +11,9 @@ import { User } from './User.entity';
 import { UserInvoice } from './UserInvoice.entity';
 
 export enum PaymentGatewayType {
-  PAYPAL = 1,
-  STRIPE = 2,
-  CoinPayment = 3,
+  PAYPAL = '1',
+  STRIPE = '2',
+  CoinPayment = '3',
 }
 
 @Entity()

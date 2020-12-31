@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Initial1609397981695 implements MigrationInterface {
-  name = 'Initial1609397981695';
+export class Initial1609398655142 implements MigrationInterface {
+  name = 'Initial1609398655142';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,7 +23,7 @@ export class Initial1609397981695 implements MigrationInterface {
       `CREATE TYPE "user_user_role_enum" AS ENUM('0', '1')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "email" character varying(150) NOT NULL, "password" character varying(73), "user_level" "user_user_level_enum" NOT NULL DEFAULT '0', "user_role" "user_user_role_enum" NOT NULL DEFAULT '0', "is_active" boolean NOT NULL DEFAULT false, "activation_token" uuid DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "email" character varying(150) NOT NULL, "password" character varying(73), "user_level" "user_user_level_enum" NOT NULL DEFAULT '0', "user_role" "user_user_role_enum" NOT NULL DEFAULT '0', "is_active" boolean NOT NULL DEFAULT true, "activation_token" uuid DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "token" ("id" SERIAL NOT NULL, "token_value" uuid NOT NULL DEFAULT uuid_generate_v4(), "is_active" boolean NOT NULL DEFAULT true, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "userId" integer, CONSTRAINT "PK_82fae97f905930df5d62a702fc9" PRIMARY KEY ("id"))`,

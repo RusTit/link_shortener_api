@@ -10,8 +10,8 @@ import { User } from './User.entity';
 import { UserPayment } from './UserPayment.entity';
 
 export enum UserInvoiceType {
-  MONTHLY_PLAN_FEE = 0,
-  EXTRA_CLICK_FEE = 1,
+  MONTHLY_PLAN_FEE = '0',
+  EXTRA_CLICK_FEE = '1',
 }
 
 @Entity()
