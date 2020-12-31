@@ -14,6 +14,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JweAuthGuard } from '../auth/jwe-auth.guard';
+import { Roles, RolesGuard } from '../auth/roles.guard';
+import { UserRole } from '../entities/User.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -21,7 +23,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JweAuthGuard)
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   @Get(':id/activate')
   async activate(@Param('id') id: number) {
     const result = await this.usersService.activate(id);
@@ -38,7 +41,8 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JweAuthGuard)
+  @UseGuards(JweAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   @Get(':id/inactivate')
   async inactivate(@Param('id') id: number) {
     const result = await this.usersService.inActivate(id);

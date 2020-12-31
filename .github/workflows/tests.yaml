@@ -77,7 +77,7 @@ jobs:
         run: yarn build
 
       - name: Run migrations
-        run: node ./node_modules/.bin/ts-node ./node_modules/typeorm/cli.js migration:run
+        run: yarn runMigrations
 
       - name: Run tests
         run: yarn test
