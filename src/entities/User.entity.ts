@@ -53,9 +53,9 @@ export class User {
   is_active!: boolean;
 
   @Column({
-    default: null,
     nullable: true,
     type: 'uuid',
+    default: 'uuid_generate_v4()',
   })
   activation_token!: string | null;
 
