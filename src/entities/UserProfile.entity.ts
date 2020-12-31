@@ -6,38 +6,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({
-  name: 'users',
-})
-export class User {
+@Entity()
+export class UserProfile {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({
-    length: 150,
-    nullable: false,
-    unique: true,
-  })
-  email!: string;
-
-  @Column({
-    length: 73, // bcrypt based
-    nullable: false,
-  })
-  password!: string;
-
-  @Column({
-    type: 'boolean',
-    default: false,
-    nullable: false,
-  })
-  is_active!: boolean;
-
-  @Column({
-    default: null,
     nullable: true,
+    type: 'text',
   })
-  activation_token!: string;
+  location!: string | null;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',
