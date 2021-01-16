@@ -6,7 +6,7 @@ import {
   DeleteDomain,
   DeleteRedirect,
   UpdateRedirect,
-} from './models';
+} from './dtos';
 
 export async function runRequest(url: string, body: string): Promise<void> {
   const res = await fetch(url, {

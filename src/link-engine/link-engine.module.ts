@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LinkEngineService } from './link-engine.service';
+import { LinkEngineController } from './link-engine.controller';
 
 @Module({
   providers: [
@@ -12,5 +13,6 @@ import { LinkEngineService } from './link-engine.service';
     },
   ],
   exports: [LinkEngineModule],
+  controllers: [LinkEngineController],
 })
 export class LinkEngineModule {}

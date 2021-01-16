@@ -12,7 +12,6 @@ import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { PaymentsModule } from './payments/payments.module';
 import { BullModule } from '@nestjs/bull';
 import { TokensModule } from './tokens/tokens.module';
-import { EngineModule } from './engine/engine.module';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { EngineModule } from './engine/engine.module';
     ScheduleTasksModule,
     PaymentsModule,
     TokensModule,
-    EngineModule,
   ],
   controllers: [AppController],
   providers: [AppService],
