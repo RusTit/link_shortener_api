@@ -27,6 +27,7 @@ export class LinkEngineService {
       const url = `${this.linkUrl}/api/update_domain`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
+      Logger.error(e);
       return false;
     }
     return true;
@@ -37,6 +38,7 @@ export class LinkEngineService {
       const url = `${this.linkUrl}/api/delete_domain`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
+      Logger.error(e);
       return false;
     }
     return true;
@@ -47,6 +49,7 @@ export class LinkEngineService {
       const url = `${this.linkUrl}/api/create`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
+      Logger.error(e);
       return false;
     }
     return true;
@@ -57,6 +60,7 @@ export class LinkEngineService {
       const url = `${this.linkUrl}/api/update_redirect`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
+      Logger.error(e);
       return false;
     }
     return true;
@@ -67,6 +71,7 @@ export class LinkEngineService {
       const url = `${this.linkUrl}/api/delete_redirect`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
+      Logger.error(e);
       return false;
     }
     return true;
