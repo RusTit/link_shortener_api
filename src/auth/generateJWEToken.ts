@@ -1,19 +1,39 @@
 import generateKeyPair from 'jose/util/generate_key_pair';
 import fromKeyLike, { JWK, KeyLike } from 'jose/jwk/from_key_like';
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import { Logger } from '@nestjs/common';
 import parseJwk from 'jose/jwk/parse';
 
 export async function savePlain(fileName: string, key: JWK): Promise<void> {
   const dataStr = JSON.stringify(key);
-  await fs.writeFile(fileName, dataStr);
+  return new Promise((resolve, reject) => {
+    fs.writeFile(fileName, dataStr, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
 export async function loadKey(fileName: string): Promise<KeyLike | null> {
   try {
     Logger.debug(`Try to load key from ${fileName}`);
-    const contentString = await fs.readFile(fileName, {
-      encoding: 'utf8',
+    const contentString: string = await new Promise((resolve, reject) => {
+      fs.readFile(
+        fileName,
+        {
+          encoding: 'utf8',
+        },
+        (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        },
+      );
     });
     const contentObject = JSON.parse(contentString);
     const keyLike = await parseJwk(contentObject, 'PS256');
