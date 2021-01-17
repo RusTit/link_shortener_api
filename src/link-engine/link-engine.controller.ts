@@ -25,7 +25,9 @@ export class LinkEngineController {
 
   @Post('createOrUpdateDomain')
   async createOrUpdateDomain(@Body() data: CreateUpdateDomain) {
-    const result = await this.linkEngineService.createOrUpdateDomain(data);
+    const [result, message] = await this.linkEngineService.createOrUpdateDomain(
+      data,
+    );
     if (result) {
       return {
         ok: true,
@@ -34,13 +36,13 @@ export class LinkEngineController {
     }
     throw new BadRequestException({
       ok: false,
-      status: 'error mock',
+      status: message,
     });
   }
 
   @Post('deleteDomain')
   async deleteDomain(@Body() data: DeleteDomain) {
-    const result = await this.linkEngineService.deleteDomain(data);
+    const [result, message] = await this.linkEngineService.deleteDomain(data);
     if (result) {
       return {
         ok: true,
@@ -49,13 +51,13 @@ export class LinkEngineController {
     }
     throw new BadRequestException({
       ok: false,
-      status: 'error mock',
+      status: message,
     });
   }
 
   @Post('createRedirect')
   async createRedirect(@Body() data: CreateRedirect) {
-    const result = await this.linkEngineService.createRedirect(data);
+    const [result, message] = await this.linkEngineService.createRedirect(data);
     if (result) {
       return {
         ok: true,
@@ -64,13 +66,13 @@ export class LinkEngineController {
     }
     throw new BadRequestException({
       ok: false,
-      status: 'error mock',
+      status: message,
     });
   }
 
   @Post('updateRedirect')
   async updateRedirect(@Body() data: UpdateRedirect) {
-    const result = await this.linkEngineService.updateRedirect(data);
+    const [result, message] = await this.linkEngineService.updateRedirect(data);
     if (result) {
       return {
         ok: true,
@@ -79,13 +81,13 @@ export class LinkEngineController {
     }
     throw new BadRequestException({
       ok: false,
-      status: 'error mock',
+      status: message,
     });
   }
 
   @Post('deleteRedirect')
   async deleteRedirect(@Body() data: DeleteRedirect) {
-    const result = await this.linkEngineService.deleteRedirect(data);
+    const [result, message] = await this.linkEngineService.deleteRedirect(data);
     if (result) {
       return {
         ok: true,
@@ -94,7 +96,7 @@ export class LinkEngineController {
     }
     throw new BadRequestException({
       ok: false,
-      status: 'error mock',
+      status: message,
     });
   }
 }

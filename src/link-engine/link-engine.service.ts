@@ -22,58 +22,60 @@ export async function runRequest(url: string, body: string): Promise<void> {
 export class LinkEngineService {
   constructor(@Inject('LINK_ENGINE_URL') private readonly linkUrl: string) {}
 
-  async createOrUpdateDomain(data: CreateUpdateDomain): Promise<boolean> {
+  async createOrUpdateDomain(
+    data: CreateUpdateDomain,
+  ): Promise<[boolean, string]> {
     try {
       const url = `${this.linkUrl}/api/update_domain`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
       Logger.error(e);
-      return false;
+      return [false, e.message];
     }
-    return true;
+    return [true, 'ok'];
   }
 
-  async deleteDomain(data: DeleteDomain): Promise<boolean> {
+  async deleteDomain(data: DeleteDomain): Promise<[boolean, string]> {
     try {
       const url = `${this.linkUrl}/api/delete_domain`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
       Logger.error(e);
-      return false;
+      return [false, e.message];
     }
-    return true;
+    return [true, 'ok'];
   }
 
-  async createRedirect(data: CreateRedirect): Promise<boolean> {
+  async createRedirect(data: CreateRedirect): Promise<[boolean, string]> {
     try {
       const url = `${this.linkUrl}/api/create`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
       Logger.error(e);
-      return false;
+      return [false, e.message];
     }
-    return true;
+    return [true, 'ok'];
   }
 
-  async updateRedirect(data: UpdateRedirect): Promise<boolean> {
+  async updateRedirect(data: UpdateRedirect): Promise<[boolean, string]> {
     try {
       const url = `${this.linkUrl}/api/update_redirect`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
       Logger.error(e);
-      return false;
+      return [false, e.message];
     }
-    return true;
+    return [true, 'ok'];
   }
 
-  async deleteRedirect(data: DeleteRedirect): Promise<boolean> {
+  async deleteRedirect(data: DeleteRedirect): Promise<[boolean, string]> {
     try {
       const url = `${this.linkUrl}/api/delete_redirect`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
       Logger.error(e);
-      return false;
+      return [false, e.message];
     }
-    return true;
+    return [true, 'ok'];
   }
 }
