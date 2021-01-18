@@ -14,8 +14,10 @@ export async function runRequest(url: string, body: string): Promise<void> {
     body,
     headers: { 'Content-Type': 'application/json' },
   });
-  const json = await res.json();
-  Logger.debug(json);
+  const httpCode = res.status;
+  // const json = await res.json();
+  // Logger.debug(json);
+  Logger.debug(`Http code: ${httpCode}`);
 }
 
 @Injectable()
