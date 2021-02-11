@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { LinkEngineService } from './link-engine.service';
 import { LinkEngineController } from './link-engine.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UrlEntity } from '../entities/Url.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([UrlEntity])],
   providers: [
     LinkEngineService,
     {

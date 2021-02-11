@@ -2,9 +2,13 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
+  Req,
   Post,
+  Delete,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { LinkEngineService } from './link-engine.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JweAuthGuard } from '../auth/jwe-auth.guard';
@@ -15,6 +19,7 @@ import {
   DeleteRedirect,
   UpdateRedirect,
 } from './dtos';
+import { User } from '../entities/User.entity';
 
 @ApiTags('link-engine')
 @ApiBearerAuth()
@@ -23,15 +28,24 @@ import {
 export class LinkEngineController {
   constructor(private readonly linkEngineService: LinkEngineService) {}
 
+  @Get('getDomainsList')
+  async getList(@Req() req: Request) {
+    return this.linkEngineService.getList(req.user as User);
+  }
+
   @Post('createOrUpdateDomain')
-  async createOrUpdateDomain(@Body() data: CreateUpdateDomain) {
+  async createOrUpdateDomain(
+    @Body() data: CreateUpdateDomain,
+    @Req() req: Request,
+  ) {
     const [result, message] = await this.linkEngineService.createOrUpdateDomain(
       data,
+      req.user as User,
     );
     if (result) {
       return {
         ok: true,
-        message: 'mock',
+        message: 'Domain was set successfully',
       };
     }
     throw new BadRequestException({
@@ -40,13 +54,16 @@ export class LinkEngineController {
     });
   }
 
-  @Post('deleteDomain')
-  async deleteDomain(@Body() data: DeleteDomain) {
-    const [result, message] = await this.linkEngineService.deleteDomain(data);
+  @Delete('deleteDomain')
+  async deleteDomain(@Body() data: DeleteDomain, @Req() req: Request) {
+    const [result, message] = await this.linkEngineService.deleteDomain(
+      data,
+      req.user as User,
+    );
     if (result) {
       return {
         ok: true,
-        message: 'mock',
+        message: 'Domain was deleted successfully',
       };
     }
     throw new BadRequestException({

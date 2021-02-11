@@ -60,4 +60,10 @@ export class UrlEntity {
     length: 128,
   })
   out_of_reach_failover_url!: string | null;
+
+  @Column({
+    type: 'int4',
+    nullable: true,
+  })
+  user_id!: number | null;
 }
