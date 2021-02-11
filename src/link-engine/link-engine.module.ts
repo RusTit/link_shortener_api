@@ -3,9 +3,10 @@ import { LinkEngineService } from './link-engine.service';
 import { LinkEngineController } from './link-engine.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UrlEntity } from '../entities/Url.entity';
+import { MappingEntity } from '../entities/Mapping.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UrlEntity])],
+  imports: [TypeOrmModule.forFeature([UrlEntity, MappingEntity])],
   providers: [
     LinkEngineService,
     {

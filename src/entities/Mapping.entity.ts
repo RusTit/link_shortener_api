@@ -40,4 +40,10 @@ export class MappingEntity {
     nullable: true,
   })
   sms_uuid!: string | null;
+
+  @Column({
+    type: 'int4',
+    nullable: true,
+  })
+  user_id!: number | null;
 }

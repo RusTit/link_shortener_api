@@ -2,8 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LinkEngineService } from './link-engine.service';
 import { UrlEntity } from '../entities/Url.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { MappingEntity } from '../entities/Mapping.entity';
 
 export const UrlEntityMock: Partial<UrlEntity> = {};
+export const MappingEntityMock: Partial<MappingEntity> = {};
 
 describe('LinkEngineService', () => {
   let service: LinkEngineService;
@@ -19,6 +21,10 @@ describe('LinkEngineService', () => {
           },
         },
         { provide: getRepositoryToken(UrlEntity), useValue: UrlEntityMock },
+        {
+          provide: getRepositoryToken(MappingEntity),
+          useValue: MappingEntityMock,
+        },
       ],
     }).compile();
 

@@ -3,7 +3,8 @@ import { LinkEngineController } from './link-engine.controller';
 import { LinkEngineService } from './link-engine.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UrlEntity } from '../entities/Url.entity';
-import { UrlEntityMock } from './link-engine.service.spec';
+import { MappingEntityMock, UrlEntityMock } from './link-engine.service.spec';
+import { MappingEntity } from '../entities/Mapping.entity';
 
 describe('LinkEngineController', () => {
   let controller: LinkEngineController;
@@ -20,6 +21,10 @@ describe('LinkEngineController', () => {
           },
         },
         { provide: getRepositoryToken(UrlEntity), useValue: UrlEntityMock },
+        {
+          provide: getRepositoryToken(MappingEntity),
+          useValue: MappingEntityMock,
+        },
       ],
     }).compile();
 

@@ -30,7 +30,7 @@ export class LinkEngineController {
 
   @Get('getDomainsList')
   async getList(@Req() req: Request) {
-    return this.linkEngineService.getList(req.user as User);
+    return this.linkEngineService.getDomainsList(req.user as User);
   }
 
   @Post('createOrUpdateDomain')
@@ -73,8 +73,11 @@ export class LinkEngineController {
   }
 
   @Post('createRedirect')
-  async createRedirect(@Body() data: CreateRedirect) {
-    const [result, message] = await this.linkEngineService.createRedirect(data);
+  async createRedirect(@Body() data: CreateRedirect, @Req() req: Request) {
+    const [result, message] = await this.linkEngineService.createRedirect(
+      data,
+      req.user as User,
+    );
     if (result) {
       return {
         ok: true,
@@ -85,11 +88,19 @@ export class LinkEngineController {
       ok: false,
       status: message,
     });
+  }
+
+  @Get('getRedirectionsList')
+  async getRedirectionsList(@Req() req: Request) {
+    return this.linkEngineService.getRedirectionsList(req.user as User);
   }
 
   @Post('updateRedirect')
-  async updateRedirect(@Body() data: UpdateRedirect) {
-    const [result, message] = await this.linkEngineService.updateRedirect(data);
+  async updateRedirect(@Body() data: UpdateRedirect, @Req() req: Request) {
+    const [result, message] = await this.linkEngineService.updateRedirect(
+      data,
+      req.user as User,
+    );
     if (result) {
       return {
         ok: true,
@@ -102,9 +113,12 @@ export class LinkEngineController {
     });
   }
 
-  @Post('deleteRedirect')
-  async deleteRedirect(@Body() data: DeleteRedirect) {
-    const [result, message] = await this.linkEngineService.deleteRedirect(data);
+  @Delete('deleteRedirect')
+  async deleteRedirect(@Body() data: DeleteRedirect, @Req() req: Request) {
+    const [result, message] = await this.linkEngineService.deleteRedirect(
+      data,
+      req.user as User,
+    );
     if (result) {
       return {
         ok: true,

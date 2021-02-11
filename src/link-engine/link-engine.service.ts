@@ -9,6 +9,7 @@ import {
 } from './dtos';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UrlEntity } from '../entities/Url.entity';
+import { MappingEntity } from '../entities/Mapping.entity';
 import { User } from '../entities/User.entity';
 import { Repository } from 'typeorm';
 
@@ -29,7 +30,9 @@ export class LinkEngineService {
   constructor(
     @Inject('LINK_ENGINE_URL') private readonly linkUrl: string,
     @InjectRepository(UrlEntity)
-    private urlEntityRepository: Repository<UrlEntity>,
+    private readonly urlEntityRepository: Repository<UrlEntity>,
+    @InjectRepository(MappingEntity)
+    private readonly mappingEntityRepository: Repository<MappingEntity>,
   ) {}
 
   async createOrUpdateDomain(
@@ -64,7 +67,7 @@ export class LinkEngineService {
     return [true, 'ok'];
   }
 
-  async getList(user: User): Promise<UrlEntity[]> {
+  async getDomainsList(user: User): Promise<UrlEntity[]> {
     return this.urlEntityRepository.find({
       where: {
         user_id: user.id,
@@ -104,10 +107,31 @@ export class LinkEngineService {
     return [true, 'ok'];
   }
 
-  async createRedirect(data: CreateRedirect): Promise<[boolean, string]> {
+  async createRedirect(
+    data: CreateRedirect,
+    user: User,
+  ): Promise<[boolean, string]> {
     try {
+      const existingEntity = await this.mappingEntityRepository.findOne({
+        where: {
+          orig_url: data.orig_url,
+        },
+      });
+      if (existingEntity) {
+        return [false, 'Redirection already exist'];
+      }
       const url = `${this.linkUrl}/api/create`;
       await runRequest(url, JSON.stringify(data));
+      const createdEntity = await this.mappingEntityRepository.findOne({
+        where: {
+          orig_url: data.orig_url,
+        },
+      });
+      if (!createdEntity) {
+        return [false, 'Redirection was not created'];
+      }
+      createdEntity.user_id = user.id;
+      await this.mappingEntityRepository.save(createdEntity);
     } catch (e) {
       Logger.error(e);
       return [false, e.message];
@@ -115,8 +139,28 @@ export class LinkEngineService {
     return [true, 'ok'];
   }
 
-  async updateRedirect(data: UpdateRedirect): Promise<[boolean, string]> {
+  async getRedirectionsList(user: User): Promise<MappingEntity[]> {
+    return this.mappingEntityRepository.find({
+      where: {
+        user_id: user.id,
+      },
+    });
+  }
+
+  async updateRedirect(
+    data: UpdateRedirect,
+    user: User,
+  ): Promise<[boolean, string]> {
     try {
+      const existingEntity = await this.mappingEntityRepository.findOne({
+        where: {
+          orig_url: data.orig_url,
+          user_id: user.id,
+        },
+      });
+      if (!existingEntity) {
+        return [false, 'Redirection is not exist'];
+      }
       const url = `${this.linkUrl}/api/update_redirect`;
       await runRequest(url, JSON.stringify(data));
     } catch (e) {
@@ -126,10 +170,31 @@ export class LinkEngineService {
     return [true, 'ok'];
   }
 
-  async deleteRedirect(data: DeleteRedirect): Promise<[boolean, string]> {
+  async deleteRedirect(
+    data: DeleteRedirect,
+    user: User,
+  ): Promise<[boolean, string]> {
     try {
+      const existingEntity = await this.mappingEntityRepository.findOne({
+        where: {
+          new_url: data.newUrl,
+          user_id: user.id,
+        },
+      });
+      if (!existingEntity) {
+        return [false, 'Redirection is not exist'];
+      }
       const url = `${this.linkUrl}/api/delete_redirect`;
       await runRequest(url, JSON.stringify(data));
+      const deletedEntity = await this.mappingEntityRepository.findOne({
+        where: {
+          new_url: data.newUrl,
+          user_id: user.id,
+        },
+      });
+      if (deletedEntity) {
+        return [false, 'Redirection was not deleted'];
+      }
     } catch (e) {
       Logger.error(e);
       return [false, e.message];
