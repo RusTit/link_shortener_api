@@ -3,7 +3,11 @@ import { ClickReportController } from './click-report.controller';
 import { ClickReportService } from './click-report.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ClickReportEntity } from '../entities/ClickReport.entity';
-import { ClickReportEntityMock } from './click-report.service.spec';
+import {
+  ClickReportEntityMock,
+  MappingEntityMock,
+} from './click-report.service.spec';
+import { MappingEntity } from '../entities/Mapping.entity';
 
 describe('ClickReportController', () => {
   let controller: ClickReportController;
@@ -16,6 +20,10 @@ describe('ClickReportController', () => {
         {
           provide: getRepositoryToken(ClickReportEntity),
           useValue: ClickReportEntityMock,
+        },
+        {
+          provide: getRepositoryToken(MappingEntity),
+          useValue: MappingEntityMock,
         },
       ],
     }).compile();
