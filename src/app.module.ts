@@ -14,6 +14,7 @@ import { BullModule } from '@nestjs/bull';
 import { TokensModule } from './tokens/tokens.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { PaymentsModule } from './payments/payments.module';
+import { UserLevelModule } from './user-level/user-level.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PaymentsModule } from './payments/payments.module';
     TokensModule,
     InvoicesModule,
     PaymentsModule,
+    UserLevelModule,
   ],
   controllers: [AppController],
   providers: [AppService],
