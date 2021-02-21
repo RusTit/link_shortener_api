@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClickReportDto } from './dto/create-click-report.dto';
-import { UpdateClickReportDto } from './dto/update-click-report.dto';
+import { User } from '../entities/User.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import { ClickReportEntity } from '../entities/ClickReport.entity';
+import { MappingEntity } from '../entities/Mapping.entity';
 
 @Injectable()
 export class ClickReportService {
-  create(createClickReportDto: CreateClickReportDto) {
-    return 'This action adds a new clickReport';
+  constructor(
+    @InjectRepository(ClickReportEntity)
+    private readonly clickReportEntityRepository: Repository<ClickReportEntity>,
+    @InjectRepository(MappingEntity)
+    private readonly mappingEntityRepository: Repository<MappingEntity>,
+  ) {}
+
+  async findAll(user: User): Promise<ClickReportEntity[]> {
+    const usersMappings = await this.mappingEntityRepository.find({
+      where: {
+        user_id: user.id,
+      },
+      select: ['new_url'],
+    });
+    const proxyDomains = usersMappings.map((entity) => entity.new_url);
+    return this.clickReportEntityRepository.find({
+      where: {
+        proxy_domain: In(proxyDomains),
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all clickReport`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} clickReport`;
-  }
-
-  update(id: number, updateClickReportDto: UpdateClickReportDto) {
-    return `This action updates a #${id} clickReport`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clickReport`;
+  async findOne(
+    id: number,
+    user: User,
+  ): Promise<ClickReportEntity | undefined> {
+    const usersMappings = await this.mappingEntityRepository.find({
+      where: {
+        user_id: user.id,
+      },
+      select: ['new_url'],
+    });
+    const proxyDomains = usersMappings.map((entity) => entity.new_url);
+    return this.clickReportEntityRepository.findOne({
+      where: {
+        id,
+        proxy_domain: In(proxyDomains),
+      },
+    });
   }
 }
