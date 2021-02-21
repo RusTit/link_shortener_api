@@ -6,7 +6,7 @@ import { Request } from 'express';
 import { User } from '../entities/User.entity';
 
 @Controller('payments')
-@ApiTags('invoices')
+@ApiTags('payments')
 @ApiBearerAuth()
 @UseGuards(JweAuthGuard)
 export class PaymentsController {

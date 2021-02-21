@@ -14,6 +14,12 @@ const ext = __filename.slice(pos + 1);
       name: 'report',
       processors: [join(__dirname, 'jobs', `report-pre-aggregation.${ext}`)],
     }),
+    BullModule.registerQueue({
+      name: 'every_day_clicks',
+      processors: [
+        join(__dirname, 'jobs', `every_day_clicks-aggregation.${ext}`),
+      ],
+    }),
   ],
   providers: [
     MonthlyUsageInvoiceService,
