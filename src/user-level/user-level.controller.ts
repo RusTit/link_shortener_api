@@ -1,16 +1,23 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UserLevelService } from './user-level.service';
-import { CreateUserLevelDto } from './dto/create-user-level.dto';
-import { UpdateUserLevelDto } from './dto/update-user-level.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JweAuthGuard } from '../auth/jwe-auth.guard';
+import { Roles, RolesGuard } from '../auth/roles.guard';
+import { UserRole } from '../entities/User.entity';
 
 @Controller('user-level')
+@ApiTags('clicks-levels', 'admin')
+@UseGuards(JweAuthGuard, RolesGuard)
+@Roles(UserRole.ADMIN)
+@ApiBearerAuth()
 export class UserLevelController {
   constructor(private readonly userLevelService: UserLevelService) {}
-
-  @Post()
-  create(@Body() createUserLevelDto: CreateUserLevelDto) {
-    return this.userLevelService.create(createUserLevelDto);
-  }
 
   @Get()
   findAll() {
@@ -20,11 +27,6 @@ export class UserLevelController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userLevelService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserLevelDto: UpdateUserLevelDto) {
-    return this.userLevelService.update(+id, updateUserLevelDto);
   }
 
   @Delete(':id')

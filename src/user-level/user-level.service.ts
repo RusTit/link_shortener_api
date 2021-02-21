@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserLevelDto } from './dto/create-user-level.dto';
-import { UpdateUserLevelDto } from './dto/update-user-level.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserLevelEntity } from '../entities/UserLevel.entity';
 
 @Injectable()
 export class UserLevelService {
-  create(createUserLevelDto: CreateUserLevelDto) {
-    return 'This action adds a new userLevel';
+  constructor(
+    @InjectRepository(UserLevelEntity)
+    private userLevelEntityRepository: Repository<UserLevelEntity>,
+  ) {}
+
+  async findAll(): Promise<UserLevelEntity[]> {
+    return this.userLevelEntityRepository.find();
   }
 
-  findAll() {
-    return `This action returns all userLevel`;
+  async findOne(id: number): Promise<UserLevelEntity | undefined> {
+    return this.userLevelEntityRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userLevel`;
-  }
-
-  update(id: number, updateUserLevelDto: UpdateUserLevelDto) {
-    return `This action updates a #${id} userLevel`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} userLevel`;
+  async remove(id: number): Promise<boolean> {
+    const existingEntity = await this.userLevelEntityRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (existingEntity) {
+      await this.userLevelEntityRepository.remove(existingEntity);
+      return true;
+    }
+    return false;
   }
 }
