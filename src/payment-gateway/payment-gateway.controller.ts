@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
+import { PaymentGatewayService } from './payment-gateway.service';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('payments')
-@Controller('payments')
-export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+@ApiTags('payment-gateway')
+@Controller('payment-gateway')
+export class PaymentGatewayController {
+  constructor(private readonly paymentGatewayService: PaymentGatewayService) {}
 
   @Get('coin/callback')
   async coinPaymentCallback() {

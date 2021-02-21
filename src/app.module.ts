@@ -9,7 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { LinkEngineModule } from './link-engine/link-engine.module';
 import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
-import { PaymentsModule } from './payments/payments.module';
+import { PaymentGatewayModule } from './payment-gateway/payment-gateway.module';
 import { BullModule } from '@nestjs/bull';
 import { TokensModule } from './tokens/tokens.module';
 import { InvoicesModule } from './invoices/invoices.module';
@@ -29,7 +29,7 @@ import { InvoicesModule } from './invoices/invoices.module';
     AuthModule,
     LinkEngineModule,
     ScheduleTasksModule,
-    PaymentsModule,
+    PaymentGatewayModule,
     TokensModule,
     InvoicesModule,
   ],
