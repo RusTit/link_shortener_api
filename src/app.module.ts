@@ -12,6 +12,7 @@ import { ScheduleTasksModule } from './schedule-tasks/schedule-tasks.module';
 import { PaymentsModule } from './payments/payments.module';
 import { BullModule } from '@nestjs/bull';
 import { TokensModule } from './tokens/tokens.module';
+import { InvoicesModule } from './invoices/invoices.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TokensModule } from './tokens/tokens.module';
     ScheduleTasksModule,
     PaymentsModule,
     TokensModule,
+    InvoicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
