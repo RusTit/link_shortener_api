@@ -5,6 +5,8 @@ import { User } from '../../entities/User.entity';
 import { MappingEntity } from '../../entities/Mapping.entity';
 import { ClickReportEntity } from '../../entities/ClickReport.entity';
 import * as moment from 'moment';
+import { UserLevelEntity } from '../../entities/UserLevel.entity';
+import { UserInvoice } from '../../entities/UserInvoice.entity';
 
 export default async function (job: Job, cb: DoneCallback) {
   Logger.debug(
@@ -15,11 +17,14 @@ export default async function (job: Job, cb: DoneCallback) {
     con = await createConnection();
     const userRepository = con.getRepository(User);
     const allUsers = await userRepository.find({
-      select: ['id'],
+      select: ['id', 'user_level'],
     });
     const mappingRepository = con.getRepository(MappingEntity);
     const clickReportRepository = con.getRepository(ClickReportEntity);
-    const lastDay = moment().startOf('day').toDate();
+    const userLevelRepository = con.getRepository(UserLevelEntity);
+    const userInvoiceRepository = con.getRepository(UserInvoice);
+    const userLevels = await userLevelRepository.find();
+    const startOfTheCurrentMonth = moment().startOf('month').toDate();
     for (const user of allUsers) {
       const usersMappings = await mappingRepository.find({
         where: {
@@ -31,9 +36,26 @@ export default async function (job: Job, cb: DoneCallback) {
       const clickReports = await clickReportRepository.find({
         where: {
           proxy_domain: In(proxyDomains),
-          report_time: MoreThanOrEqual(lastDay),
+          report_time: MoreThanOrEqual(startOfTheCurrentMonth),
         },
       });
+      const totalClicks = clickReports.reduce((previousValue, currentValue) => {
+        return previousValue + currentValue.count;
+      }, 0);
+      const currentUserLevel = userLevels.find(
+        (uL) => uL.userLevel === user.user_level,
+      );
+      if (!currentUserLevel) {
+        Logger.warn(
+          `Cannot find userLevel ${user.user_level} for user: ${user.id}`,
+        );
+      } else {
+        if (
+          totalClicks >=
+          currentUserLevel.allowedClicks + currentUserLevel.extraClicks
+        ) {
+        }
+      }
     }
     cb(null, 'Success');
   } catch (e) {
