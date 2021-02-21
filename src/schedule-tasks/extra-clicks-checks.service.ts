@@ -11,8 +11,8 @@ export class ExtraClicksChecksService {
     @InjectQueue('every_day_clicks') private everyDayClicksPreAggQueue: Queue,
   ) {}
 
-  @Cron('0 0 0 * * *')
-  // @Cron('0 * * * * *')
+  // @Cron('0 0 0 * * *')
+  @Cron('0 * * * * *')
   async handleCron() {
     this.logger.debug('Check extra clicks each day');
     await this.everyDayClicksPreAggQueue.add({});

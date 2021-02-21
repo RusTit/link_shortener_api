@@ -25,6 +25,7 @@ export default async function (job: Job, cb: DoneCallback) {
     const userInvoiceRepository = con.getRepository(UserInvoice);
     const userLevels = await userLevelRepository.find();
     const startOfTheCurrentMonth = moment().startOf('month').toDate();
+    const endOfTheCurrentMonth = moment().endOf('month').toDate();
     for (const user of allUsers) {
       const usersMappings = await mappingRepository.find({
         where: {
@@ -49,11 +50,39 @@ export default async function (job: Job, cb: DoneCallback) {
         Logger.warn(
           `Cannot find userLevel ${user.user_level} for user: ${user.id}`,
         );
-      } else {
-        if (
-          totalClicks >=
-          currentUserLevel.allowedClicks + currentUserLevel.extraClicks
-        ) {
+        continue;
+      }
+      const invoicesCurrentMonth = await userInvoiceRepository.find({
+        where: {
+          user,
+          billing_period_start: startOfTheCurrentMonth,
+          billing_period_end: endOfTheCurrentMonth,
+        },
+      });
+      const invoiceMultiplier = invoicesCurrentMonth.reduce(
+        (previousValue, currentValue) => {
+          if (currentValue.payment) {
+            return previousValue + 1;
+          }
+          return previousValue;
+        },
+        0,
+      );
+      const needNewInvoice =
+        totalClicks >=
+        (currentUserLevel.allowedClicks + currentUserLevel.extraClicks) *
+          invoiceMultiplier;
+      if (needNewInvoice) {
+        const alreadyCreatedInvoice = invoicesCurrentMonth.find(
+          (invoice) => !invoice.payment,
+        );
+        if (!alreadyCreatedInvoice) {
+          const newInvoice = new UserInvoice();
+          newInvoice.billing_period_start = startOfTheCurrentMonth;
+          newInvoice.billing_period_end = endOfTheCurrentMonth;
+          newInvoice.user = user;
+          newInvoice.amount = 1000;
+          await userInvoiceRepository.save(newInvoice);
         }
       }
     }
