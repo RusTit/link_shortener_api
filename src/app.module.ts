@@ -15,6 +15,7 @@ import { TokensModule } from './tokens/tokens.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { PaymentsModule } from './payments/payments.module';
 import { UserLevelModule } from './user-level/user-level.module';
+import { ClickReportModule } from './click-report/click-report.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UserLevelModule } from './user-level/user-level.module';
     InvoicesModule,
     PaymentsModule,
     UserLevelModule,
+    ClickReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
