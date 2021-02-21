@@ -13,6 +13,7 @@ import { PaymentGatewayModule } from './payment-gateway/payment-gateway.module';
 import { BullModule } from '@nestjs/bull';
 import { TokensModule } from './tokens/tokens.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { InvoicesModule } from './invoices/invoices.module';
     PaymentGatewayModule,
     TokensModule,
     InvoicesModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
