@@ -1,11 +1,6 @@
 import { Job, DoneCallback } from 'bull';
 import { Logger } from '@nestjs/common';
-import {
-  Connection,
-  createConnection,
-  MoreThanOrEqual,
-  LessThan,
-} from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import { Clicks } from '../../entities/Clicks.entity';
 import { ClickReportEntity } from '../../entities/ClickReport.entity';
 import * as moment from 'moment';
@@ -16,14 +11,13 @@ export default async function (job: Job, cb: DoneCallback) {
   try {
     con = await createConnection();
     const clicksDataRepository = con.getRepository(Clicks);
-    const now = new Date();
     const hourStart = moment().startOf('hour').toDate();
     const hourEnd = moment().endOf('hour').toDate();
-    const clicksEntities = await clicksDataRepository.find({
-      where: {
-        clicked_on: [MoreThanOrEqual(hourStart), LessThan(hourEnd)],
-      },
-    });
+    const clicksEntities = await clicksDataRepository
+      .createQueryBuilder('clicks')
+      .where('clicked_on >= :hourStart', { hourStart })
+      .andWhere('clicked_on < :hourEnd', { hourEnd })
+      .execute();
     const clicksReportRepository = con.getRepository(ClickReportEntity);
     const clicksCalculation = new Map<string, ClickReportEntity>();
     for (const clickEntity of clicksEntities) {
@@ -31,23 +25,27 @@ export default async function (job: Job, cb: DoneCallback) {
       if (!clickReport) {
         clickReport = await clicksReportRepository.findOne({
           where: {
-            report_time: [MoreThanOrEqual(hourStart), LessThan(hourEnd)],
+            report_time: hourStart,
           },
         });
+        if (clickReport) {
+          clickReport.count = 0;
+        }
       }
       if (!clickReport) {
         clickReport = new ClickReportEntity();
         clickReport.count = 0;
         clickReport.campaign_id = 0;
         clickReport.country = 'TODO';
-        clickReport.orig_domain = clickEntity.replaced_url as string;
-        clickReport.proxy_domain = clickEntity.new_url;
+        clickReport.orig_domain = clickEntity.clicks_replaced_url;
+        clickReport.proxy_domain = clickEntity.clicks_new_url;
         clickReport.referrer = 'TODO';
       }
       clickReport.count += 1;
+      clicksCalculation.set(clickEntity.new_url, clickReport);
     }
     const entitiesToSave = [...clicksCalculation.values()].map((v) => {
-      v.report_time = now;
+      v.report_time = hourStart;
       return v;
     });
     await clicksReportRepository.save(entitiesToSave);
@@ -60,4 +58,5 @@ export default async function (job: Job, cb: DoneCallback) {
       await con.close();
     }
   }
+  Logger.debug(`Report task: [${process.pid}] finished`);
 }

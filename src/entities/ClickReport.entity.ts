@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'click_reports',
@@ -42,4 +48,16 @@ export class ClickReportEntity {
     nullable: false,
   })
   count!: number;
+
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
+    name: 'created_at',
+  })
+  createdAt!: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    name: 'updated_at',
+  })
+  updatedAt!: Date;
 }
