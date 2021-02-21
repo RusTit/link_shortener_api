@@ -24,7 +24,7 @@ export enum UserLevel {
 }
 
 export enum UserRole {
-  STANDART = '0',
+  STANDARD = '0',
   ADMIN = '1',
 }
 
@@ -68,7 +68,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.STANDART,
+    default: UserRole.STANDARD,
   })
   user_role!: UserRole;
 
