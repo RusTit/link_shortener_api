@@ -1,6 +1,6 @@
 import { Job, DoneCallback } from 'bull';
 import { Logger } from '@nestjs/common';
-import { Connection, createConnection } from 'typeorm';
+import { Connection, createConnection, Raw } from 'typeorm';
 import { Clicks } from '../../entities/Clicks.entity';
 import { ClickReportEntity } from '../../entities/ClickReport.entity';
 import * as moment from 'moment';
@@ -12,12 +12,15 @@ export default async function (job: Job, cb: DoneCallback) {
     con = await createConnection();
     const clicksDataRepository = con.getRepository(Clicks);
     const hourStart = moment().startOf('hour').toDate();
-    const hourEnd = moment().endOf('hour').toDate();
-    const clicksEntities = await clicksDataRepository
-      .createQueryBuilder('clicks')
-      .where('clicked_on >= :hourStart', { hourStart })
-      .andWhere('clicked_on < :hourEnd', { hourEnd })
-      .execute();
+    const hourEnd = moment().startOf('hour').add(1, 'hour').toDate();
+    const clicksEntities = await clicksDataRepository.find({
+      where: {
+        clicked_on: Raw(
+          (alias) =>
+            `${alias} >= '${hourStart.toJSON()}'::timestamp AND ${alias} < '${hourEnd.toJSON()}'::timestamp`,
+        ),
+      },
+    });
     const clicksReportRepository = con.getRepository(ClickReportEntity);
     const clicksCalculation = new Map<string, ClickReportEntity>();
     for (const clickEntity of clicksEntities) {
@@ -37,8 +40,8 @@ export default async function (job: Job, cb: DoneCallback) {
         clickReport.count = 0;
         clickReport.campaign_id = 0;
         clickReport.country = 'TODO';
-        clickReport.orig_domain = clickEntity.clicks_replaced_url;
-        clickReport.proxy_domain = clickEntity.clicks_new_url;
+        clickReport.orig_domain = clickEntity.replaced_url as string;
+        clickReport.proxy_domain = clickEntity.new_url;
         clickReport.referrer = 'TODO';
       }
       clickReport.count += 1;
