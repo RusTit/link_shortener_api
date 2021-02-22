@@ -17,8 +17,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class PaymentGatewayController {
   constructor(private readonly paymentGatewayService: PaymentGatewayService) {}
 
-  @Get('coin/callback')
-  async coinPaymentCallback() {
+  @Get('coin/webhook')
+  @ApiTags('coin')
+  async coinPaymentWebhook(@Body() webhookData: any) {
+    Logger.debug('Coin webhook');
+    Logger.debug(webhookData);
     return {
       ok: true,
       message: 'mock',
@@ -26,6 +29,7 @@ export class PaymentGatewayController {
   }
 
   @Get('stripe/session/:invoice')
+  @ApiTags('stripe')
   async stripeCreateNewSession(@Param('invoice') invoiceId: number) {
     const invoice = await this.paymentGatewayService.getInvoice(invoiceId);
     if (!invoice) {
@@ -41,10 +45,11 @@ export class PaymentGatewayController {
       });
     }
     const session = await this.paymentGatewayService.createSession(invoice);
-    return { sessionId: session.id };
+    return { id: session.id };
   }
 
   @Get('stripe/success.html')
+  @ApiTags('stripe')
   async stripePaymentSuccess(@Query('session_id') session_id?: string) {
     const session = await this.paymentGatewayService.getSessionById(session_id);
     return (
@@ -55,6 +60,7 @@ export class PaymentGatewayController {
   }
 
   @Get('stripe/cancel.html')
+  @ApiTags('stripe')
   async stripePaymentCancel(@Query('session_id') session_id: string) {
     const session = await this.paymentGatewayService.getSessionById(session_id);
     return (
@@ -65,6 +71,7 @@ export class PaymentGatewayController {
   }
 
   @Post('stripe/webhook')
+  @ApiTags('stripe')
   async stripePaymentWebhook(@Body() webhookData: any) {
     Logger.debug('Stripe webhook');
     Logger.debug(webhookData);
@@ -74,8 +81,11 @@ export class PaymentGatewayController {
     };
   }
 
-  @Get('paypal/callback')
-  async paypalPaymentCallback() {
+  @Post('paypal/webhook')
+  @ApiTags('paypal')
+  async paypalPaymentWebhook(@Body() webhookData: any) {
+    Logger.debug('Paypal webhook');
+    Logger.debug(webhookData);
     return {
       ok: true,
       message: 'mock',

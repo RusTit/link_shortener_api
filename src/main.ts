@@ -7,7 +7,9 @@ import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-applicati
 
 async function bootstrap() {
   Logger.debug('Creating nest app');
-  const factoryOptions: NestApplicationOptions = {};
+  const factoryOptions: NestApplicationOptions = {
+    cors: true,
+  };
   if (process.env.SIMPLE_CONSOLE_LOGGER) {
     factoryOptions.logger = console;
   }
