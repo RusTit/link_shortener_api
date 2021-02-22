@@ -57,7 +57,8 @@ export class PaymentGatewayService {
     return this.stripe.checkout.sessions.retrieve(session_id);
   }
 
-  async processCheckoutCompleted(data: any): Promise<void> {
-    const session = await this.getSessionById(data.id);
+  async processCheckoutCompleted(webHookPayload: any): Promise<void> {
+    const session = await this.getSessionById(webHookPayload.data.object.id);
+    debugger;
   }
 }

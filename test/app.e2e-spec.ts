@@ -1,3 +1,5 @@
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -20,6 +22,23 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('/payment-gateway/stripe/webhook (POST) checkout payload', async function () {
+    const pathToPayload = path.resolve(
+      __dirname,
+      '..',
+      'examples',
+      'checkout.json',
+    );
+    const payloadCheckoutCompleted = await fs.readFile(pathToPayload, {
+      encoding: 'utf-8',
+    });
+    const data = JSON.parse(payloadCheckoutCompleted);
+    return request(app.getHttpServer())
+      .post('/payment-gateway/stripe/webhook')
+      .send(data)
+      .expect(201);
   });
 
   afterEach(async () => {

@@ -1,0 +1,54 @@
+{
+  "id": "evt_1INZb0IZsyEHt0uZg58PS9rf",
+  "object": "event",
+  "api_version": "2020-08-27",
+  "created": 1613981805,
+  "data": {
+    "object": {
+      "id": "cs_test_a1Etj9K1GyR6jV0iNmMD2AKJ5Mtko8IPwnRRSosUKeSkaH1A1FdYaoU80V",
+      "object": "checkout.session",
+      "allow_promotion_codes": null,
+      "amount_subtotal": 1000,
+      "amount_total": 1000,
+      "billing_address_collection": null,
+      "cancel_url": "http://localhost:3000/payment-gateway/stripe/cancel.html?session_id={CHECKOUT_SESSION_ID}",
+      "client_reference_id": null,
+      "currency": "usd",
+      "customer": "cus_IzYiMt0iNCzf4G",
+      "customer_details": {
+        "email": "titanofdarkness@gmail.com",
+        "tax_exempt": "none",
+        "tax_ids": [
+        ]
+      },
+      "customer_email": null,
+      "livemode": false,
+      "locale": null,
+      "metadata": {
+      },
+      "mode": "payment",
+      "payment_intent": "pi_1INZaDIZsyEHt0uZQMfcCRRZ",
+      "payment_method_types": [
+        "card"
+      ],
+      "payment_status": "paid",
+      "setup_intent": null,
+      "shipping": null,
+      "shipping_address_collection": null,
+      "submit_type": null,
+      "subscription": null,
+      "success_url": "http://localhost:3000/payment-gateway/stripe/success.html?session_id={CHECKOUT_SESSION_ID}",
+      "total_details": {
+        "amount_discount": 0,
+        "amount_tax": 0
+      }
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "checkout.session.completed"
+}

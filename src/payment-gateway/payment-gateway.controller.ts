@@ -79,11 +79,10 @@ export class PaymentGatewayController {
     Logger.debug(webhookData);
     const type: EnabledEvent = webhookData.type;
     switch (type) {
-      case 'payment_intent.succeeded':
-        break;
       case 'checkout.session.completed':
         await this.paymentGatewayService.processCheckoutCompleted(webhookData);
         break;
+      case 'payment_intent.succeeded':
       default:
         Logger.warn(`Type: ${type} is not processing currently`);
     }
