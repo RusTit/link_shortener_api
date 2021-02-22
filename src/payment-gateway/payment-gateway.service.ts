@@ -49,7 +49,7 @@ export class PaymentGatewayService {
   }
 
   async getSessionById(
-    session_id: string,
+    session_id?: string,
   ): Promise<Stripe.Response<Stripe.Checkout.Session> | null> {
     if (!session_id) {
       return null;

@@ -3,10 +3,18 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestApplicationOptions } from '@nestjs/common/interfaces/nest-application-options.interface';
 
 async function bootstrap() {
   Logger.debug('Creating nest app');
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const factoryOptions: NestApplicationOptions = {};
+  if (process.env.SIMPLE_CONSOLE_LOGGER) {
+    factoryOptions.logger = console;
+  }
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    factoryOptions,
+  );
 
   Logger.debug('Creating openapi docs');
   const options = new DocumentBuilder()
