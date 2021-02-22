@@ -45,9 +45,7 @@ export class PaymentGatewayController {
   }
 
   @Get('stripe/success.html')
-  async stripePaymentSuccess(
-    @Query('session_id') session_id?: string,
-  ) {
+  async stripePaymentSuccess(@Query('session_id') session_id?: string) {
     const session = await this.paymentGatewayService.getSessionById(session_id);
     return (
       `<html lang="en"><head><title>Stripe payment success</title></head>` +
