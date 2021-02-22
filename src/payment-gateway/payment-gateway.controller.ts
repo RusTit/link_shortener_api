@@ -6,6 +6,8 @@ import {
   Logger,
   Param,
   NotFoundException,
+  BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { PaymentGatewayService } from './payment-gateway.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -32,10 +34,28 @@ export class PaymentGatewayController {
         status: 'Invoice not found',
       });
     }
+    if (invoice.payment) {
+      throw new BadRequestException({
+        ok: false,
+        status: 'Already paid',
+      });
+    }
+    const session = await this.paymentGatewayService.createSession(invoice);
+    return { sessionId: session.id };
+  }
+
+  @Get('stripe/success.html')
+  async stripePaymentSuccess(@Query('session_id') session_id: string) {
+    const session = await this.paymentGatewayService.getSessionById(session_id);
+    return (
+      `<html><head><title>Stripe payment success</title></head>` +
+      `<body></body>` +
+      `</html>`
+    );
   }
 
   @Post('stripe/webhook')
-  async stripePaymentCallback(@Body() webhookData: any) {
+  async stripePaymentWebhook(@Body() webhookData: any) {
     Logger.debug('Stripe webhook');
     Logger.debug(webhookData);
     return {
