@@ -14,11 +14,11 @@ import { UserPayment } from '../entities/UserPayment.entity';
     {
       provide: 'STRIPE_API',
       useFactory: () => {
-        const { STRIPE_PUB_KEY } = process.env;
-        if (!STRIPE_PUB_KEY) {
-          throw new Error(`STRIPE pub key is invalid ${STRIPE_PUB_KEY}`);
+        const { STRIPE_SEC_KEY } = process.env;
+        if (!STRIPE_SEC_KEY) {
+          throw new Error(`STRIPE key is invalid ${STRIPE_SEC_KEY}`);
         }
-        const stripe = new Stripe(STRIPE_PUB_KEY, {
+        const stripe = new Stripe(STRIPE_SEC_KEY, {
           apiVersion: '2020-08-27',
         });
         Logger.debug('Stripe initialized');
