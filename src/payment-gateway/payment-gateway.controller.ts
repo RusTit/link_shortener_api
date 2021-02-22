@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { PaymentGatewayService } from './payment-gateway.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Stripe } from 'stripe';
+import EnabledEvent = Stripe.WebhookEndpointCreateParams.EnabledEvent;
 
 @ApiTags('payment-gateway')
 @Controller('payment-gateway')
@@ -75,6 +77,16 @@ export class PaymentGatewayController {
   async stripePaymentWebhook(@Body() webhookData: any) {
     Logger.debug('Stripe webhook');
     Logger.debug(webhookData);
+    const type: EnabledEvent = webhookData.type;
+    switch (type) {
+      case 'payment_intent.succeeded':
+        break;
+      case 'checkout.session.completed':
+        await this.paymentGatewayService.processCheckoutCompleted(webhookData);
+        break;
+      default:
+        Logger.warn(`Type: ${type} is not processing currently`);
+    }
     return {
       ok: true,
       message: 'mock',
