@@ -48,7 +48,17 @@ export class PaymentGatewayController {
   async stripePaymentSuccess(@Query('session_id') session_id: string) {
     const session = await this.paymentGatewayService.getSessionById(session_id);
     return (
-      `<html><head><title>Stripe payment success</title></head>` +
+      `<html lang="en"><head><title>Stripe payment success</title></head>` +
+      `<body></body>` +
+      `</html>`
+    );
+  }
+
+  @Get('stripe/cancel.html')
+  async stripePaymentCancel(@Query('session_id') session_id: string) {
+    const session = await this.paymentGatewayService.getSessionById(session_id);
+    return (
+      `<html lang="en"><head><title>Stripe payment cancel</title></head>` +
       `<body></body>` +
       `</html>`
     );
