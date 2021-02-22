@@ -1,8 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import Stripe from 'stripe';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInvoice } from '../entities/UserInvoice.entity';
-import { UserPayment } from '../entities/UserPayment.entity';
+import { GatewayType, UserPayment } from '../entities/UserPayment.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -43,6 +43,9 @@ export class PaymentGatewayService {
         },
       ],
       mode: 'payment',
+      metadata: {
+        invoice: `${invoice.id}`,
+      },
       success_url: `${STRIPE_DOMAIN}/payment-gateway/stripe/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${STRIPE_DOMAIN}/payment-gateway/stripe/cancel.html?session_id={CHECKOUT_SESSION_ID}`,
     });
@@ -59,6 +62,32 @@ export class PaymentGatewayService {
 
   async processCheckoutCompleted(webHookPayload: any): Promise<void> {
     const session = await this.getSessionById(webHookPayload.data.object.id);
-    debugger;
+    const invoiceId: string | undefined = session?.metadata?.invoice;
+    if (!invoiceId) {
+      Logger.warn(
+        `Invalid invoice id: ${invoiceId} for session: ${webHookPayload.data.object.id}`,
+      );
+      return;
+    }
+    const invoiceEntity = await this.userInvoiceRepository.findOne({
+      where: {
+        id: invoiceId,
+      },
+    });
+    if (!invoiceEntity) {
+      Logger.error(`Invoice ${invoiceId} not found!`);
+      return;
+    }
+    if (invoiceEntity.payment) {
+      Logger.error(`Invoice ${invoiceId} already payed!`);
+      return;
+    }
+    const paymentEntity = new UserPayment();
+    paymentEntity.user = invoiceEntity.user;
+    paymentEntity.amount = session?.amount_total ?? -1;
+    paymentEntity.invoices = [invoiceEntity];
+    paymentEntity.gateway_type = GatewayType.STRIPE;
+    paymentEntity.payment_id = webHookPayload.data.object.id;
+    await this.userPaymentRepository.save(paymentEntity);
   }
 }
