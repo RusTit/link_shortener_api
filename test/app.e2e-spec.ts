@@ -15,6 +15,7 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    jest.setTimeout(15000);
   });
 
   it('/ (GET)', () => {
@@ -24,7 +25,7 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 
-  it('/payment-gateway/stripe/webhook (POST) checkout payload', async function () {
+  it('/payment-gateway/stripe/webhook (POST) checkout payload', async () => {
     const pathToPayload = path.resolve(
       __dirname,
       '..',

@@ -1,4 +1,5 @@
 const sourcePath = process.env.NODE_ENV === 'test' ? 'src' : 'dist';
+const { DEBUG_DB_QUERIES } = process.env;
 let DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) {
   DATABASE_URL = 'postgres://test:test@localhost/test';
@@ -24,4 +25,5 @@ module.exports = {
         rejectUnauthorized: false,
       }
     : undefined,
+  logging: !!DEBUG_DB_QUERIES,
 };

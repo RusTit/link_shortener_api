@@ -73,6 +73,7 @@ export class PaymentGatewayService {
       where: {
         id: invoiceId,
       },
+      relations: ['user', 'payment'],
     });
     if (!invoiceEntity) {
       Logger.error(`Invoice ${invoiceId} not found!`);
