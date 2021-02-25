@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { ClickReportEntity } from '../entities/ClickReport.entity';
 import { MappingEntity } from '../entities/Mapping.entity';
+import { BaseListQuery } from '../dtos/common';
 
 @Injectable()
 export class ClickReportService {
@@ -14,11 +15,16 @@ export class ClickReportService {
     private readonly mappingEntityRepository: Repository<MappingEntity>,
   ) {}
 
-  async findAll(user: User): Promise<ClickReportEntity[]> {
+  async findAll(
+    user: User,
+    options?: BaseListQuery,
+  ): Promise<ClickReportEntity[]> {
     const usersMappings = await this.mappingEntityRepository.find({
       where: {
         user_id: user.id,
       },
+      skip: options?.skip,
+      take: options?.take,
       select: ['new_url'],
     });
     const proxyDomains = usersMappings.map((entity) => entity.new_url);

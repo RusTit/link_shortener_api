@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { ClickReportService } from './click-report.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JweAuthGuard } from '../auth/jwe-auth.guard';
 import { Request } from 'express';
 import { User } from '../entities/User.entity';
+import { BaseListQuery } from '../dtos/common';
 
 @Controller('click-report')
 @ApiTags('reports')
@@ -13,8 +14,8 @@ export class ClickReportController {
   constructor(private readonly clickReportService: ClickReportService) {}
 
   @Get()
-  findAll(@Req() req: Request) {
-    return this.clickReportService.findAll(req.user as User);
+  findAll(@Req() req: Request, @Query() options?: BaseListQuery) {
+    return this.clickReportService.findAll(req.user as User, options);
   }
 
   @Get(':id')
