@@ -14,7 +14,7 @@ export class ClickReportController {
   constructor(private readonly clickReportService: ClickReportService) {}
 
   @Get()
-  findAll(@Req() req: Request, @Query() options?: BaseListQuery) {
+  findAll(@Req() req: Request, @Query() options: BaseListQuery) {
     return this.clickReportService.findAll(req.user as User, options);
   }
 
